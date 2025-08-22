@@ -62,7 +62,7 @@
     \begin{titlepage}
         \centering
         \vspace*{2cm}
-        {\Huge\bfseries ICPC MX 2025 Reference (Date 2 version)\par}
+        {\Huge\bfseries ICPC MX 2025 Reference (Date 3 version)\par}
         \vspace{1cm}
         {\Large \authorname \par} % Use defined author name
         \vspace{2cm}
@@ -4265,8 +4265,8 @@ vector<char> segmentedSieve(long long L, long long R) {
     return isPrime;
 }
 \end{lstlisting}
-\subsection{Linear sieve}[style=compactcpp]
-\begin{lstlisting}
+\subsection{Linear sieve}
+\begin{lstlisting}[style=compactcpp]
 const int N = 10000000;
 vector<int> lp(N+1);
 vector<int> pr;
@@ -4287,7 +4287,7 @@ for (int i=2; i <= N; ++i) {
 
 \subsection{Sum of divisors}
 
-\begin{lstlisting}
+\begin{lstlisting}[style=compactcpp]
 long long SumOfDivisors(long long num) {
     long long total = 1;
 
@@ -4353,7 +4353,7 @@ int fermat(int n) {
 
 \subsection{Factorials}
 
-\begin{lstlisting}
+\begin{lstlisting}[style=compactcpp]
 // Precompute factorials and inverse factorials
 void precompute(ll n = MAXN - 1) {
     factorial[0] = factorial[1] = 1;
@@ -4419,7 +4419,7 @@ int modInverse(int A, int M) {
 \end{lstlisting}
 
 \subsection{BinPow Modulo Inv}
-\begin{lstlisting}
+\begin{lstlisting}[style=compactcpp]
 ll modInv(ll a, ll mod = MOD) {
     return power(a, mod - 2, mod);
 }
@@ -5389,7 +5389,7 @@ void solve(){
 
 \subsection{Complex point}
 
-\begin{lstlisting}
+\begin{lstlisting}[style=compactcpp]
 typedef double T;
 typedef complex<T> pt;
 #define x real()
