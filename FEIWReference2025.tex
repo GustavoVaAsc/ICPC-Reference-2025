@@ -513,6 +513,46 @@ private:
 };
 \end{lstlisting}
 
+\subsection{Segment Tree (Iterative)}
+
+\begin{lstlisting}[style=compactcpp]
+int segtree[2*100000 + 5];
+
+    void build(vector<int> &arr, int n){
+        for(int i=0; i<n; i++)
+            segtree[n+i] = arr[i];
+        
+        for(int i=n-1; i>=1; i--)
+            segtree[i] = max(segtree[2*i], segtree[2*i+1]);
+    }
+
+    void update(int pos, int value, int n){
+        pos+=n;
+        segtree[pos] = value;
+
+        while(pos>1){
+            pos>>=1;
+            segtree[pos] = max(segtree[2*pos],segtree[2*pos+1]);
+        }
+    }
+
+    int query(int l, int r, int n){
+        l+=n;
+        r+=n;
+
+        int mx = INT_MIN;
+
+        while(l <= r){
+            if(l % 2 == 1) mx = max(mx, segtree[l++]);
+            if(r % 2 == 0) mx = max(mx, segtree[r--]);  
+            l >>= 1;
+            r >>= 1;
+        }
+
+        return mx;
+    }
+\end{lstlisting}
+
 \subsection{Segment Tree (Sum query)}
 
 \begin{lstlisting}[style=compactcpp]
@@ -1705,6 +1745,108 @@ void add_letter(int c)
         to[last][c] = sz++;
     }
     last = to[last][c];
+}
+\end{lstlisting}
+
+\subsection{Implicit Treap}
+
+\begin{lstlisting}[style=compactcpp]
+using namespace std;
+
+#include<random>
+#include<chrono>
+
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+#define ll long long
+
+struct TreapNode{
+    ll key, pr, sz;
+    TreapNode *l, *r;
+};
+
+typedef TreapNode* Treap;
+
+int getSize(Treap &t){
+    return t ? t->sz : 0;
+}
+
+void updateSize(Treap &t){
+    if (t) t->sz = 1 + getSize(t->l) + getSize(t->r);
+}
+
+void split(Treap& t, ll k, Treap &l, Treap  &r){
+    if(not t) l = r = nullptr;
+
+    else if(k < t->key){
+        split(t->l,k,l, t->l);
+        r = t;
+        updateSize(r);
+    }else{
+        split(t->r,k,t->r,r);
+        l = t;
+        updateSize(l);
+    }
+}
+
+void insert(Treap& t, Treap a){
+    if(not t) t=a;
+    else if(a->pr > t->pr){
+        split(t, a->key, a->l, a->r);
+        t = a;
+    }else{
+        if(a->key < t-> key) insert(t->l,a);
+        else insert(t->r,a);
+    }
+    updateSize(t);
+}
+
+void merge(Treap &t, Treap l, Treap r){
+    if(not l) t = r;
+    else if(not r) t = l;
+
+    else if(l->pr > r->pr){
+        merge(l->r, l->r,r);
+        t=l;
+        updateSize(t);
+    }else{
+        merge(r->l,l,r->l);
+        t=r;
+        updateSize(t);
+    }
+}
+
+void erase(Treap &t, ll k){
+    if(not t) return;
+    if(t->key == k) merge(t,t->l, t->r);
+    
+    else{
+        if(k<t->key) erase(t->l,k);
+        else erase(t->r, k);
+    }
+    updateSize(t);
+}
+
+bool find(Treap& t, ll k){
+    if (not t) return false;
+    if(t->key == k) return true;
+    if(k<t->key) return find(t->l,k);
+    return find(t->r,k);
+}
+
+void insertValue(Treap &t, ll k){
+    if(not find(t,k)){
+        Treap new_node = new TreapNode {k,rng(), 0,nullptr, nullptr};
+        insert(t, new_node);
+    }
+}
+
+ll getKth(Treap &t, int k){
+    if(!t || k<=0 || k>getSize(t)) return 0;
+    int leftSize = getSize(t->l);
+    if(k == leftSize+1) return t->key;
+    if(k <= leftSize) return getKth(t->l,k);
+    return getKth(t->r, k-leftSize-1);
 }
 \end{lstlisting}
 
@@ -6098,6 +6240,12 @@ D(n) = (n-1)(D(n-1)+D(n-2)) = nD(n-1)+(-1)^n = \lfloor \frac{n!}{e}\rfloor
 \section{Miscellaneous}
 
 Gus, this is a reminder to add more stuff here
+
+\subsection{Random number generator}
+
+\begin{lstlisting}[style=compactcpp]
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+\end{lstlisting}
 
 \subsection{Kadane's Algorithm}
 \begin{lstlisting}[style=compactcpp]
