@@ -4447,22 +4447,6 @@ vector<long long> trial_division2(long long n) {
 }
 \end{lstlisting}
 
-\subsection{Finding the divisors of a number (Fermat)}
-\begin{lstlisting}[style=compactcpp]
-int fermat(int n) {
-    int a = ceil(sqrt(n));
-    int b2 = a*a - n;
-    int b = round(sqrt(b2));
-    while (b * b != b2) {
-        a = a + 1;
-        b2 = a*a - n;
-        b = round(sqrt(b2));
-    }
-    return a - b;
-}
-\end{lstlisting}
-
-
 \subsection{Factorials}
 
 \begin{lstlisting}[style=compactcpp]
